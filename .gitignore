@@ -1,0 +1,6 @@
+# ignore outputs
+target/
+# ignore project files
+.project
+.classpath
+
