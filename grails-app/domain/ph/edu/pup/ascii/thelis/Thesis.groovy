@@ -1,4 +1,4 @@
-wpackage ph.edu.pup.ascii.thelis
+package ph.edu.pup.ascii.thelis
 
 import ph.edu.pup.ascii.thelis.type.Course
 
