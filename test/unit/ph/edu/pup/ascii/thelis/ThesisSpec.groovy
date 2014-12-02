@@ -17,11 +17,11 @@ class ThesisSpec extends Specification {
     def cleanup() {
     }
 
-    void "save should save a thesis with at least title and 1 author"() {
+    void "save should save a thesis with at least title, 1 author, course, and publish date"() {
         given:
             def author = Author.build()
 
-            def thesis = new Thesis(title: 'very title', authors: [author] as Set)
+            def thesis = new Thesis(title: 'very title', authors: [author] as Set, course: 'BSCS', publishDate: 'Dec 2014')
 
         when:
             thesis.save()
