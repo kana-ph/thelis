@@ -7,6 +7,7 @@ class Author {
     String name
     Course course
 
-    static constraints = {
+    static mapping = {
+        version false
     }
 }
