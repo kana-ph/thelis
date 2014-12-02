@@ -1,9 +1,14 @@
 package ph.edu.pup.ascii.thelis
 
+import ph.edu.pup.ascii.thelis.type.Course
+
 class Thesis {
 
     String title
     String thesisAbstract = ''
+
+    String publishDate
+    Course course
 
     static hasMany = [
         authors: Author,
