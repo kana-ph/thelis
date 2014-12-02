@@ -1,4 +1,4 @@
-package ph.edu.pup.ascii.thelis
+wpackage ph.edu.pup.ascii.thelis
 
 class Thesis {
 
