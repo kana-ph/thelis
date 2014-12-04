@@ -1,10 +1,14 @@
 package ph.edu.pup.ascii.thelis.api.v1
 
+import ph.edu.pup.ascii.thelis.*
 import ph.edu.pup.ascii.thelis.common.ThelisController
 
 import org.springframework.http.HttpStatus
 
 class ThesisController extends ThelisController {
+
+    AuthorService authorService
+    ThesisService thesisService
 
     def save() {
         def thesis = createThesisFromJson(request.JSON)
@@ -18,7 +22,7 @@ class ThesisController extends ThelisController {
             title: json.title,
             publishDate: json.publishDate,
             course: json.course,
-            author: createAuthorSet(json)
+            author: createAuthorSet(json.authors)
         )
     }
 
