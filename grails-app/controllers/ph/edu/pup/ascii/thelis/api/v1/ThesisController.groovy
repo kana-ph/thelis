@@ -14,7 +14,7 @@ class ThesisController extends ThelisController {
         def thesis = createThesisFromJson(request.JSON)
 
         thesis = thesisService.save(thesis)
-        sendResponse(HttpStatus.OK, request.JSON)
+        sendResponse(HttpStatus.OK, thesis)
     }
 
     private Thesis createThesisFromJson(Map json) {
