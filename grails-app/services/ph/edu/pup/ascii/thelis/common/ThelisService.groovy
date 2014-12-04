@@ -6,7 +6,7 @@ abstract class ThelisService {
 
 	public Object validateAndSave(Object object, Map saveArgs = [:]) {
 		if (!object.validate()) {
-			throw new ValidationException("Invalid $object", object)
+			throw new ValidationException("Invalid '${object.getClass().name}' object", object)
 		} else {
 			return object.save(saveArgs)
 		}

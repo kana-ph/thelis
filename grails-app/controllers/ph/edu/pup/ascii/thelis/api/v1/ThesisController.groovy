@@ -22,7 +22,7 @@ class ThesisController extends ThelisController {
             title: json.title,
             publishDate: json.publishDate,
             course: json.course,
-            author: createAuthorSet(json.authors)
+            authors: createAuthorSet(json.authors)
         )
     }
 
