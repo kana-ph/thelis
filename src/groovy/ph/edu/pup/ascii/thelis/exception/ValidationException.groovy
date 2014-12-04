@@ -17,7 +17,6 @@ class ValidationException extends RuntimeException {
 		List fieldErrors = []
 
 		invalidObject.errors.fieldErrors.each {
-			String constraint = it.code.tokenize('.')[]
 			fieldErrors << [
 				field: it.field,
 				code: it.code,
