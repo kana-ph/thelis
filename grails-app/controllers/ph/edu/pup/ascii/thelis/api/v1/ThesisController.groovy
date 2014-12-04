@@ -1,4 +1,4 @@
-package ph.edu.pup.ascii.thelis
+package ph.edu.pup.ascii.thelis.api.v1
 
 import ph.edu.pup.ascii.thelis.common.ThelisController
 
