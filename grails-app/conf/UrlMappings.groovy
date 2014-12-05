@@ -9,5 +9,9 @@ class UrlMappings {
 		"/api/v1/thesis" (controller: "thesis") {
 			action = [POST: "save"]
 		}
+
+		"/api/v1/thesis/${id}" (controller: "thesis") {
+			action = [GET: "show", PATCH: "update"]
+		}
 	}
 }
