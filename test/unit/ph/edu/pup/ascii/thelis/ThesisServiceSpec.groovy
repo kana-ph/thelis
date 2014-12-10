@@ -43,4 +43,23 @@ class ThesisServiceSpec extends Specification {
         then:
             thrown ValidationException
     }
+
+    void "fetchById should return an instance of thesis"() {
+        given:
+            def saved = Thesis.build( course: 'BSIT', title: 'meow', publishDate: 'Dec 2014', authors: [Author.build(name: 'goose')])
+
+        when:
+            def thesis = service.fetchById(saved.id)
+
+        then:
+            null != thesis
+    }
+
+    void "fetchById should return null if the id did not match any saved instance"() {
+        when:
+            def thesis = service.fetchById(999999L)
+
+        then:
+            null == thesis
+    }
 }

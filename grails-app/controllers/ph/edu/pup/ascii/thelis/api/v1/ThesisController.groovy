@@ -13,7 +13,7 @@ class ThesisController extends ThelisController {
     ThesisService thesisService
 
     def show(String id) {
-        def thesis = Thesis.get(id as Long)
+        def thesis = thesisService.fetchById(id as Long)
 
         if (thesis) {
             sendResponse(HttpStatus.OK, thesis)
@@ -30,7 +30,7 @@ class ThesisController extends ThelisController {
     }
 
     def update(String id) {
-        def thesis = Thesis.get(id as Long)
+        def thesis = thesisService.fetchById(id as Long)
 
         if (thesis) {
             updateThesisFromJson(thesis, request.JSON)

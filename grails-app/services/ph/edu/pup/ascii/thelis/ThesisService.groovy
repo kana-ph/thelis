@@ -10,4 +10,8 @@ class ThesisService extends ThelisService {
     public Thesis save(Thesis thesis) {
         return validateAndSave(thesis)
     }
+
+    public Thesis fetchById(long id) {
+        return Thesis.get(id)
+    }
 }
