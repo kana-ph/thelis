@@ -18,7 +18,7 @@ class ThesisController extends ThelisController {
         if (thesis) {
             sendResponse(HttpStatus.OK, thesis)
         } else {
-            sendResponse(HttpStatus.NOT_FOUND, ApiError.ENTITY_NOT_FOUND)
+            send404Response()
         }
     }
 
@@ -38,7 +38,7 @@ class ThesisController extends ThelisController {
 
             sendResponse(HttpStatus.OK, thesis)
         } else {
-            sendResponse(HttpStatus.NOT_FOUND, ApiError.ENTITY_NOT_FOUND)
+            send404Response()
         }
     }
 
