@@ -2,7 +2,7 @@ package ph.edu.pup.ascii.thelis.type
 
 enum ApiError {
 	URL_NOT_FOUND('URL not found'),
-	INTERNAL_SERVER_ERROR('Something went wrong at the backend. Please review stacktrace'),
+	INTERNAL_SERVER_ERROR('Something went wrong at the server.'),
 	VALIDATION_ERROR('Failed to save entity due to validation error');
 
 	private String message
