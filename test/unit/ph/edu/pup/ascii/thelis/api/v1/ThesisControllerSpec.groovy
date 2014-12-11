@@ -7,6 +7,7 @@ import grails.buildtestdata.mixin.Build
 import grails.test.mixin.*
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
@@ -69,13 +70,51 @@ class ThesisControllerSpec extends Specification {
             thesis.id == response.json.id
     }
 
-    void "show should respond with 404 if there is no thesis matched the id"() {
+    void "show should respond with NOT_FOUND if there is no thesis matched the id"() {
         given:
-            thesisService.fetchById(_) >> null
+            def id = 42
+            thesisService.fetchById(id) >> null
         when:
-            controller.show("42")
+            controller.show("$id")
 
         then:
             HttpStatus.NOT_FOUND.value() == response.status
+    }
+
+    void "update should respond with NOT_FOUND if there is no thesis matched the id"() {
+        given:
+            def id = 13
+            thesisService.fetchById(id) >> null
+        when:
+            controller.update("$id")
+
+        then:
+            HttpStatus.NOT_FOUND.value() == response.status
+    }
+
+    void "update should respond with OK if the thesis is updated"() {
+        given:
+            def thesis = Thesis.build()
+            thesisService.fetchById(thesis.id) >> thesis
+            thesisService.save(thesis) >> thesis
+
+        when:
+            controller.update("${thesis.id}")
+
+        then:
+            HttpStatus.OK.value() == response.status
+    }
+
+    void "update should respond with UNPROCESSABLE_ENTITY if the thesis is invalid"() {
+        given:
+            def thesis = Thesis.build()
+            thesisService.fetchById(thesis.id) >> thesis
+            thesisService.save(thesis) >> { throw new ValidationException('Fake error', thesis) }
+
+        when:
+            controller.update("${thesis.id}")
+
+        then:
+            HttpStatus.UNPROCESSABLE_ENTITY.value() == response.status
     }
 }
