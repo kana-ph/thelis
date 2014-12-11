@@ -55,4 +55,27 @@ class ThesisControllerSpec extends Specification {
         then:
             HttpStatus.UNPROCESSABLE_ENTITY.value() == response.status
     }
+
+    void "show should respond with OK and the thesis object if an entity matched the id"() {
+        given:
+            def thesis = Thesis.build()
+            thesisService.fetchById(thesis.id) >> thesis
+
+        when:
+            controller.show("${thesis.id}")
+
+        then:
+            HttpStatus.OK.value() == response.status
+            thesis.id == response.json.id
+    }
+
+    void "show should respond with 404 if there is no thesis matched the id"() {
+        given:
+            thesisService.fetchById(_) >> null
+        when:
+            controller.show("42")
+
+        then:
+            HttpStatus.NOT_FOUND.value() == response.status
+    }
 }
