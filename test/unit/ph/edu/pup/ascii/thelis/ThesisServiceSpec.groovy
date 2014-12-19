@@ -44,6 +44,21 @@ class ThesisServiceSpec extends Specification {
             thrown ValidationException
     }
 
+    void "save should throw ValidationException if the title is not unique"() {
+        given:
+            Thesis.build(title: "omg")
+            def thesis = new Thesis(title: "omg", course: "BSCS", publishDate: "Jan 2015", authors: [Author.build()])
+
+        expect:
+            Thesis.findByTitle("omg")
+
+        when:
+            service.save(thesis)
+
+        then:
+            thrown ValidationException
+    }
+
     void "fetchById should return an instance of thesis"() {
         given:
             def saved = Thesis.build( course: 'BSIT', title: 'meow', publishDate: 'Dec 2014', authors: [Author.build(name: 'goose')])
