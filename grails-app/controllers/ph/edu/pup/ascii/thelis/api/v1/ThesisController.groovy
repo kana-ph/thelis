@@ -23,7 +23,7 @@ class ThesisController extends ThelisController {
                 send404Response()
             }
         } else {
-            sendResponse(HttpStatus.UNPROCESSABLE_ENTITY, ApiError.NUMBER_EXPECTED)
+            sendResponse(HttpStatus.BAD_REQUEST, ApiError.NUMBER_EXPECTED)
         }
     }
 
@@ -61,7 +61,7 @@ class ThesisController extends ThelisController {
                 send404Response()
             }
         } else {
-            sendResponse(HttpStatus.UNPROCESSABLE_ENTITY, ApiError.NUMBER_EXPECTED)
+            sendResponse(HttpStatus.BAD_REQUEST, ApiError.NUMBER_EXPECTED)
         }
     }
 
