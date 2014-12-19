@@ -16,6 +16,7 @@ class Thesis {
     ]
 
     static constraints = {
+        title unique: true
         thesisAbstract blank: true
         authors nullable: false, minSize: 1
     }
