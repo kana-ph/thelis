@@ -7,7 +7,7 @@ class UrlMappings {
 		"500"(controller: "error", action: "handle500")
 
 		"/api/v1/thesis" (controller: "thesis") {
-			action = [POST: "save"]
+			action = [GET:"search", POST: "save"]
 		}
 
 		"/api/v1/thesis/${id}" (controller: "thesis") {

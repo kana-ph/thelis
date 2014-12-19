@@ -13,13 +13,31 @@ class ThesisController extends ThelisController {
     ThesisService thesisService
 
     def show(String id) {
-        def thesis = thesisService.fetchById(id as Long)
 
-        if (thesis) {
-            sendResponse(HttpStatus.OK, thesis)
+        if(isNumber(id)) {
+            def thesis = thesisService.fetchById(id as Long)
+
+            if (thesis) {
+                sendResponse(HttpStatus.OK, thesis)
+            } else {
+                send404Response()
+            }
         } else {
-            send404Response()
+            sendResponse(HttpStatus.UNPROCESSABLE_ENTITY, ApiError.NUMBER_EXPECTED)
         }
+    }
+
+    def search() {
+        Set<Thesis> result = [] as Set
+
+        Map filter = fetchUrlParams()
+        if (filter) {
+            result = thesisService.filterTheses(filter)
+        } else {
+            result = thesisService.fetchAll()
+        }
+
+        sendResponse(result)
     }
 
     def save() {
@@ -30,15 +48,20 @@ class ThesisController extends ThelisController {
     }
 
     def update(String id) {
-        def thesis = thesisService.fetchById(id as Long)
 
-        if (thesis) {
-            updateThesisFromJson(thesis, request.JSON)
-            thesisService.save(thesis)
+        if(isNumber(id)) {
+            def thesis = thesisService.fetchById(id as Long)
 
-            sendResponse(HttpStatus.OK, thesis)
+            if (thesis) {
+                updateThesisFromJson(thesis, request.JSON)
+                thesisService.save(thesis)
+
+                sendResponse(HttpStatus.OK, thesis)
+            } else {
+                send404Response()
+            }
         } else {
-            send404Response()
+            sendResponse(HttpStatus.UNPROCESSABLE_ENTITY, ApiError.NUMBER_EXPECTED)
         }
     }
 
@@ -97,5 +120,15 @@ class ThesisController extends ThelisController {
         }
 
         return keywords
+    }
+
+    private boolean isNumber(String id) {
+        def numberPattern = /\d+/
+
+        return (id ==~ numberPattern)
+    }
+
+    private Map fetchUrlParams() {
+        return params.findAll { !(it.key in ['action', 'controller']) }
     }
 }
