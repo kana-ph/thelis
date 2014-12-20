@@ -13,13 +13,31 @@ class ThesisController extends ThelisController {
     ThesisService thesisService
 
     def show(String id) {
-        def thesis = thesisService.fetchById(id as Long)
 
-        if (thesis) {
-            sendResponse(HttpStatus.OK, thesis)
+        if(isNumber(id)) {
+            def thesis = thesisService.fetchById(id as Long)
+
+            if (thesis) {
+                sendResponse(HttpStatus.OK, thesis)
+            } else {
+                send404Response()
+            }
         } else {
-            send404Response()
+            sendResponse(HttpStatus.BAD_REQUEST, ApiError.NUMBER_EXPECTED)
         }
+    }
+
+    def search() {
+        Set<Thesis> result = [] as Set
+
+        Map filter = fetchUrlParams()
+        if (filter) {
+            result = thesisService.filterTheses(filter)
+        } else {
+            result = thesisService.fetchAll()
+        }
+
+        sendResponse(result)
     }
 
     def save() {
@@ -30,15 +48,20 @@ class ThesisController extends ThelisController {
     }
 
     def update(String id) {
-        def thesis = thesisService.fetchById(id as Long)
 
-        if (thesis) {
-            updateThesisFromJson(thesis, request.JSON)
-            thesisService.save(thesis)
+        if(isNumber(id)) {
+            def thesis = thesisService.fetchById(id as Long)
 
-            sendResponse(HttpStatus.OK, thesis)
+            if (thesis) {
+                updateThesisFromJson(thesis, request.JSON)
+                thesisService.save(thesis)
+
+                sendResponse(HttpStatus.OK, thesis)
+            } else {
+                send404Response()
+            }
         } else {
-            send404Response()
+            sendResponse(HttpStatus.BAD_REQUEST, ApiError.NUMBER_EXPECTED)
         }
     }
 
@@ -53,7 +76,7 @@ class ThesisController extends ThelisController {
         return addOptionalValuesFromJson(thesis, json)
     }
 
-    private void updateThesisFromJson(Thesis thesis, Map json) {
+    private Thesis updateThesisFromJson(Thesis thesis, Map json) {
         if (json.containsKey('title')) {
             thesis.title = json.title
         }
@@ -66,7 +89,7 @@ class ThesisController extends ThelisController {
         if (json.containsKey('authors')) {
             thesis.authors = createAuthorSet(json.authors)
         }
-        addOptionalValuesFromJson(thesis, json)
+        return addOptionalValuesFromJson(thesis, json)
     }
 
     private Thesis addOptionalValuesFromJson(Thesis thesis, Map json) {
@@ -74,7 +97,7 @@ class ThesisController extends ThelisController {
             thesis.thesisAbstract = json.thesisAbstract
         }
         if (json.containsKey('keywords')) {
-            thesis.keywords = createKeywordSet(json.keyword)
+            thesis.keywords = createKeywordSet(json.keywords)
         }
         return thesis
     }
@@ -97,5 +120,13 @@ class ThesisController extends ThelisController {
         }
 
         return keywords
+    }
+
+    private boolean isNumber(String id) {
+        return (id ==~ /\d+/)
+    }
+
+    private Map fetchUrlParams() {
+        return params.findAll { !(it.key in ['action', 'controller']) }
     }
 }

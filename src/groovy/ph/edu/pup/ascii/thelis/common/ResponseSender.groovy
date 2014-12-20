@@ -15,6 +15,14 @@ trait ResponseSender {
 		render status: HttpStatus.NO_CONTENT.value()
 	}
 
+	public void sendResponse(Set objects) {
+		if (objects) {
+			sendResponse(HttpStatus.OK, objects)
+		} else {
+			send204Response()
+		}
+	}
+
 	public void sendResponse(HttpStatus status, Object responseObject) {
 		response.status = status.value()
 		respond responseObject

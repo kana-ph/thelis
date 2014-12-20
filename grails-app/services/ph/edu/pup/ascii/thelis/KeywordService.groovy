@@ -10,4 +10,8 @@ class KeywordService {
 
         return keyword ?: new Keyword(value: value).save()
     }
+
+    public List<Keyword> findKeywords(String value) {
+        return Keyword.findAllByValueIlike("%$value%")
+    }
 }

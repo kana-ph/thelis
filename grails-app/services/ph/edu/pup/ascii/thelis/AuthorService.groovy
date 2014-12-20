@@ -10,4 +10,8 @@ class AuthorService {
 
         return author ?: new Author(name: name).save()
     }
+
+    public List<Author> findAuthors(String name) {
+        return Author.findAllByNameIlike("%$name%")
+    }
 }

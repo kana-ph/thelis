@@ -81,6 +81,13 @@ class ThesisControllerSpec extends Specification {
             HttpStatus.NOT_FOUND.value() == response.status
     }
 
+    void "show should respond with BAD_REQUEST if the id is not a number"() {
+        when:
+            controller.show("woof-woof")
+        then:
+            HttpStatus.BAD_REQUEST.value() == response.status
+    }
+
     void "update should respond with NOT_FOUND if there is no thesis matched the id"() {
         given:
             def id = 13
@@ -105,6 +112,13 @@ class ThesisControllerSpec extends Specification {
             HttpStatus.OK.value() == response.status
     }
 
+    void "update should respond with BAD_REQUEST if the id is not a number"() {
+        when:
+            controller.update("meow meow")
+        then:
+            HttpStatus.BAD_REQUEST.value() == response.status
+    }
+
     void "update should respond with UNPROCESSABLE_ENTITY if the thesis is invalid"() {
         given:
             def thesis = Thesis.build()
@@ -116,5 +130,28 @@ class ThesisControllerSpec extends Specification {
 
         then:
             HttpStatus.UNPROCESSABLE_ENTITY.value() == response.status
+    }
+
+    void "search should invoke fetchAll() if there is no url params"() {
+        given:
+            params << [:] as Map
+
+        when:
+            controller.search()
+
+        then:
+            1 * thesisService.fetchAll()
+    }
+
+    void "search should invoke filterTheses() if there are url params"() {
+        given:
+            Map urlParams = [title: 'the', keyword: 'game']
+            params << urlParams
+
+        when:
+            controller.search()
+
+        then:
+            1 * thesisService.filterTheses(_)
     }
 }

@@ -3,7 +3,8 @@ package ph.edu.pup.ascii.thelis.type
 enum ApiError {
 	URL_NOT_FOUND('URL not found'),
 	INTERNAL_SERVER_ERROR('Something went wrong at the server.'),
-	VALIDATION_ERROR('Failed to save entity due to validation error');
+	VALIDATION_ERROR('Failed to save entity due to validation error'),
+	NUMBER_EXPECTED('Expecting a number input');
 
 	private String message
 
