@@ -118,14 +118,12 @@ class ThesisController extends ThelisController {
         jsonKeyword.each { keywordValue ->
             keywords << keywordService.fetchKeywordByValue(keywordValue)
         }
-        
+
         return keywords
     }
 
     private boolean isNumber(String id) {
-        def numberPattern = /\d+/
-
-        return (id ==~ numberPattern)
+        return (id ==~ /\d+/)
     }
 
     private Map fetchUrlParams() {
