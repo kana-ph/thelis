@@ -76,7 +76,7 @@ class ThesisController extends ThelisController {
         return addOptionalValuesFromJson(thesis, json)
     }
 
-    private void updateThesisFromJson(Thesis thesis, Map json) {
+    private Thesis updateThesisFromJson(Thesis thesis, Map json) {
         if (json.containsKey('title')) {
             thesis.title = json.title
         }
@@ -89,7 +89,7 @@ class ThesisController extends ThelisController {
         if (json.containsKey('authors')) {
             thesis.authors = createAuthorSet(json.authors)
         }
-        addOptionalValuesFromJson(thesis, json)
+        return addOptionalValuesFromJson(thesis, json)
     }
 
     private Thesis addOptionalValuesFromJson(Thesis thesis, Map json) {
@@ -97,7 +97,7 @@ class ThesisController extends ThelisController {
             thesis.thesisAbstract = json.thesisAbstract
         }
         if (json.containsKey('keywords')) {
-            thesis.keywords = createKeywordSet(json.keyword)
+            thesis.keywords = createKeywordSet(json.keywords)
         }
         return thesis
     }
@@ -118,7 +118,7 @@ class ThesisController extends ThelisController {
         jsonKeyword.each { keywordValue ->
             keywords << keywordService.fetchKeywordByValue(keywordValue)
         }
-
+        
         return keywords
     }
 

@@ -1,6 +1,7 @@
 package ph.edu.pup.ascii.thelis
 
 import ph.edu.pup.ascii.thelis.common.ThelisService
+import ph.edu.pup.ascii.thelis.type.Course
 
 import grails.transaction.Transactional
 
@@ -25,22 +26,31 @@ class ThesisService extends ThelisService {
             result << Thesis.findAllByTitleIlike("%${filter.title}%")
         }
         if (filter.course) {
-            result << Thesis.findAllByCourse(filter.course)
+            Course course = Course.findByCode(filter.course)
+            result << Thesis.findAllByCourse(course)
         }
         if (filter.date) {
-            result << Thesis.findAllByPublishDate(filter.date)
+            result << Thesis.findAllByPublishDateIlike("%${filter.date}%")
         }
         if (filter.author) {
-            List<Author> authors = authorService.findAuthors(filter.author)
-            authors.each { author ->
-                result << Thesis.findAll { author in it.authors }
+            List<Author> authorList = authorService.findAuthors(filter.author)
+
+            def thesisCriteria = Thesis.createCriteria()
+            def matchedAuthors = thesisCriteria.listDistinct {
+                authors { 'in'('id', authorList*.id) }
             }
+
+            result << matchedAuthors
         }
         if (filter.keyword) {
-            List<Keyword> keywords = keywordService.findKeywords(filter.keyword)
-            keywords.each { keyword ->
-                result << Thesis.findAll { keyword in it.keywords }
+            List<Keyword> keywordList = keywordService.findKeywords(filter.keyword)
+
+            def thesisCriteria = Thesis.createCriteria()
+            def matchedKeywords = thesisCriteria.listDistinct {
+                keywords { 'in'('id', keywordList*.id) }
             }
+
+            result << matchedKeywords
         }
 
         return result.flatten()

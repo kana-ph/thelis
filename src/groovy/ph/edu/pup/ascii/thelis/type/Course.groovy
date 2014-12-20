@@ -16,4 +16,8 @@ enum Course {
 	public String getCode() {
 		return this.name()
 	}
+
+	public static Course findByCode(String code) {
+		return Course.values().find { code.toUpperCase() == it.name() }
+	}
 }
