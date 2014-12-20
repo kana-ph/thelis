@@ -12,7 +12,7 @@ import spock.lang.Specification
 class AuthorServiceSpec extends Specification {
 
     def setup() {
-    }
+    }\
 
     def cleanup() {
     }
@@ -40,5 +40,21 @@ class AuthorServiceSpec extends Specification {
         then:
             1 == Author.findAll().size()
             name == author.name
+    }
+
+    void "findAuthors should respond a list of authors that matched a part of the name"() {
+        given:
+            Author.build(name: 'Spiderman')
+            Author.build(name: 'Iron Man')
+            Author.build(name: 'Doge')
+
+        when:
+            def matched = service.findAuthors('man')
+
+        then:
+            2 == matched.size()
+
+            'Spiderman' in matched*.name
+            'Iron Man' in matched*.name
     }
 }

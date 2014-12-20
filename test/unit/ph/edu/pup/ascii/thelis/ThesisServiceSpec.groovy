@@ -10,10 +10,15 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(ThesisService)
-@Build([Author, Thesis])
+@Build([Author, Keyword, Thesis])
 class ThesisServiceSpec extends Specification {
 
+    AuthorService authorService = Mock()
+    KeywordService keywordService = Mock()
+
     def setup() {
+        service.authorService = authorService
+        service.keywordService = keywordService
     }
 
     def cleanup() {
@@ -76,5 +81,82 @@ class ThesisServiceSpec extends Specification {
 
         then:
             null == thesis
+    }
+
+    void "fetchAll should return a set of all the thesis objects"() {
+        given:
+            for (i in 1..100) { Thesis.build() }
+
+        when:
+            Set allTheses = service.fetchAll()
+
+        then:
+            100 == allTheses.size()
+    }
+
+    void "filterTheses should return a set of theses with partially matched title if filter has title"() {
+        given:
+            def filter = [title: 'game']
+            def expected = Thesis.build(title: 'the game')
+
+        when:
+            def result = service.filterTheses(filter)
+
+        then:
+            expected in result
+    }
+
+    void "filterTheses should return a set of theses with partially matched date if filter has date"() {
+        given:
+            def filter = [date: '2014']
+            def expected = Thesis.build(publishDate: 'Dec 2014')
+
+        when:
+            def result = service.filterTheses(filter)
+
+        then:
+            expected in result
+    }
+
+    void "filterTheses should return a set of theses that matched a course from filter"() {
+        given:
+            def filter = [course: 'BSCS']
+            def expected = Thesis.build(course: 'BSCS')
+
+        when:
+            def result = service.filterTheses(filter)
+
+        then:
+            expected in result
+    }
+
+    void "filterTheses should return a set of theses that matched at least a name of one of its authors"() {
+        given:
+            def filter = [author: 'bond']
+            def author = Author.build(name: 'James Bond')
+            def expected = Thesis.build(authors: [author])
+
+        when:
+            authorService.findAuthors(filter.author) >> [author]
+
+            def result = service.filterTheses(filter)
+
+        then:
+            expected in result
+    }
+
+    void "filterTheses should return a set of theses that matched at least a value of one of its keywords"() {
+        given:
+            def filter = [keyword: 'roll']
+            def kword = Keyword.build(value: 'rickroll')
+            def expected = Thesis.build(keywords: [kword])
+
+        when:
+            keywordService.findKeywords(filter.keyword) >> [kword]
+
+            def result = service.filterTheses(filter)
+
+        then:
+            expected in result
     }
 }

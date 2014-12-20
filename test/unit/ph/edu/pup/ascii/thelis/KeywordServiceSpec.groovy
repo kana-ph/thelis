@@ -41,4 +41,20 @@ class KeywordServiceSpec extends Specification {
             1 == Keyword.findAll().size()
             value == kword.value
     }
+
+    void "findKeywords should respond a list of keyword that matched a part of the value"() {
+        given:
+        Keyword.build(value: 'ice cream')
+        Keyword.build(value: 'cake')
+        Keyword.build(value: 'ice candy')
+
+        when:
+        def matched = service.findKeywords('ice')
+
+        then:
+        2 == matched.size()
+
+        'ice cream' in matched*.value
+        'ice candy' in matched*.value
+    }
 }

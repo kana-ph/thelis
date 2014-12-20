@@ -131,4 +131,27 @@ class ThesisControllerSpec extends Specification {
         then:
             HttpStatus.UNPROCESSABLE_ENTITY.value() == response.status
     }
+
+    void "search should invoke fetchAll() if there is no url params"() {
+        given:
+            params << [:] as Map
+
+        when:
+            controller.search()
+
+        then:
+            1 * thesisService.fetchAll()
+    }
+
+    void "search should invoke filterTheses() if there are url params"() {
+        given:
+            Map urlParams = [title: 'the', keyword: 'game']
+            params << urlParams
+
+        when:
+            controller.search()
+
+        then:
+            1 * thesisService.filterTheses(_)
+    }
 }

@@ -58,4 +58,19 @@ class ThesisSpec extends Specification {
             'course'     || 'wubb' | [Author.build(name: 'kana')]|  null  | 'Feb 2014'
             'publishDate'|| 'deyt' | [Author.build(name: 'kana')]| 'BSCOE'| null
     }
+
+    void "save should not save if the title is not unique"() {
+        given:
+            new Thesis(title: 'hoy', authors: [Author.build()], course: 'BSECE', publishDate: 'Dec 2014').save(flush: true)
+
+        expect:
+            null != Thesis.findByTitle('hoy')
+
+        when:
+            def thesis = new Thesis(title: 'hoy', authors: [Author.build()], course: 'BSIT', publishDate: 'Jan 2015')
+            thesis.save()
+
+        then:
+            null == Thesis.get(thesis.id)
+    }
 }
